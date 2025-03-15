@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>微信公众号格式化编辑器</title>
+  <meta name="description" content="微信公众号格式化编辑器，支持 Markdown 格式化，支持多种主题，支持多种渲染方式。">
+  <link rel="canonical" href="https://wechatformat.com">
   <link rel="shortcut icon" href="favicon.svg"> 
   <link rel="apple-touch-icon-precomposed" href="apple-touch-icon.png">
   <link rel="stylesheet" href="assets/css/vue-eleui.css">
@@ -21,14 +23,14 @@
       <el-header class="top">
         <div class="logo">{{ title }}</div>
         <el-form size="mini" class="ctrl" :inline=true>
-          <el-form-item label="Editor Themes">
+          <el-form-item label="Markdown 编辑器主题">
             <el-select v-model="currentEditorTheme" size="mini" placeholder="选择字体" @change="editorThemeChanged">
               <el-option v-for="editorTheme in editorThemes" :key="editorTheme.value" :label="editorTheme.label"
                 :value="editorTheme.value">
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="Fonts">
+          <el-form-item label="字体">
             <el-select v-model="currentFont" size="mini" placeholder="选择字体" @change="fontChanged">
               <el-option v-for="font in builtinFonts"  :style="{fontFamily: font.value}"
                 :key="font.value"
@@ -39,7 +41,7 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="Font Size">
+          <el-form-item label="字号">
             <el-select v-model="currentSize" size="mini" placeholder="选择段落字体大小" @change="sizeChanged">
               <el-option v-for="size in sizeOption"
                 :key="size.value"
@@ -50,7 +52,7 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="Themes">
+          <el-form-item label="主题">
             <el-select v-model="currentTheme" size="mini" placeholder="选择主题样式" @change="themeChanged">
               <el-option v-for="theme in themeOption" :key="theme.value" :label="theme.label" :value="theme.value">
                 <span style="float: left">{{ theme.label }}</span>
