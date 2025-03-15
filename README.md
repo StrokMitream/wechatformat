@@ -1,2 +1,2 @@
-# wechatformat
+# wechat format
 wechat format
