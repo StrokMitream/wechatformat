@@ -1,14 +1,14 @@
 /// <reference path="../mathjax.d.ts" />
 
-export const MATHJAX_CDN_URL = `https://cdn-doocs.oss-cn-shenzhen.aliyuncs.com/npm/mathjax@3/es5/tex-svg.js`
-export const MATHJAX_LOCAL_URL = `./static/libs/mathjax/tex-svg.js`
+// Vendored locally (see public/static/libs/mathjax/) so the deployed site makes
+// no external MathJax request. `import.meta.env.BASE_URL` keeps the path correct
+// under any Vite `base`.
+export const MATHJAX_LOCAL_URL = `${import.meta.env.BASE_URL}static/libs/mathjax/tex-svg.js`
 
 const MATHJAX_SCRIPT_ID = `MathJax-script`
 
 function getMathJaxScriptUrl(): string {
-  if (typeof window !== `undefined` && window.__MD_UTOOLS__)
-    return MATHJAX_LOCAL_URL
-  return MATHJAX_CDN_URL
+  return MATHJAX_LOCAL_URL
 }
 
 export const MATHJAX_READY_EVENT = `md:mathjax-ready`

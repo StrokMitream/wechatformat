@@ -5,7 +5,7 @@ import {
   hydratePendingInfographicDiagrams,
   initRenderer,
 } from '@md/core'
-import { postProcessHtml, renderMarkdown } from '@md/core/utils'
+import { MATHJAX_READY_EVENT, postProcessHtml, renderMarkdown } from '@md/core/utils'
 import {
   codeBlockThemeOptions,
   colorOptions,
@@ -225,6 +225,13 @@ export function startStore() {
 
   // Swap code highlight theme
   watch(codeBlockTheme, updateCodeTheme)
+
+  // MathJax loads lazily; re-render once it's ready so pending formulas
+  // (rendered as placeholders) are replaced with real SVG output.
+  window.addEventListener(MATHJAX_READY_EVENT, () => {
+    render()
+    scheduleHydrate()
+  })
 
   // Toggle the document dark class for shell UI + preview background
   watch(isDark, (dark) => {
