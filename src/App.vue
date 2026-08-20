@@ -34,7 +34,6 @@ onMounted(() => {
       <a href="/about">关于</a>
       <a href="/terms">服务条款</a>
       <a href="/privacy">隐私政策</a>
-      <a href="https://github.com/StrokMitream/wechatformat" target="_blank" rel="noopener">GitHub</a>
     </nav>
   </footer>
 </template>
