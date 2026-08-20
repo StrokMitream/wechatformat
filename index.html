@@ -1,128 +1,47 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>微信公众号格式化编辑器</title>
-  <meta name="description" content="微信公众号格式化编辑器，支持 Markdown 格式化，支持多种主题，支持多种渲染方式。">
+  <title>Markdown 编辑器 · 在线 Markdown 预览与格式化 | WeChat Format</title>
+  <meta name="description" content="免费的在线 Markdown 编辑器与预览器（Markdown editor / viewer / online / preview）。实时预览、语法高亮、多主题排版，支持数学公式与图表，一键复制到微信公众号。">
+  <meta name="keywords" content="markdown editor,markdown viewer,markdown online,markdown preview,在线 Markdown,Markdown 编辑器,Markdown 预览,微信公众号排版">
   <link rel="canonical" href="https://wechatformat.com">
-  <link rel="shortcut icon" href="favicon.svg"> 
-  <link rel="apple-touch-icon-precomposed" href="apple-touch-icon.png">
-  <link rel="stylesheet" href="assets/css/vue-eleui.css">
-  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
-  <link rel="stylesheet" href="codemirror/codemirror.css">
-  <link rel="stylesheet" href="codemirror/theme/base16-light.css">
-  <link rel="stylesheet" href="codemirror/theme/duotone-light.css">
-  <link rel="stylesheet" href="codemirror/theme/monokai.css">
-  <link rel="stylesheet" href="assets/css/app.css">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Markdown 编辑器 · 在线 Markdown 预览与格式化">
+  <meta property="og:description" content="免费在线 Markdown 编辑器与预览器：实时预览、语法高亮、多主题排版，一键复制到微信公众号。">
+  <meta property="og:url" content="https://wechatformat.com">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Markdown 编辑器 · 在线 Markdown 预览与格式化">
+  <meta name="twitter:description" content="Free online Markdown editor, viewer and preview tool with live preview, syntax highlighting and one-click copy to WeChat.">
+
+  <link rel="shortcut icon" href="/favicon.svg">
+  <link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "WeChat Format — Markdown 编辑器",
+    "alternateName": "Online Markdown Editor & Viewer",
+    "url": "https://wechatformat.com",
+    "applicationCategory": "Productivity",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "description": "Online Markdown editor, viewer and preview tool with live preview, syntax highlighting, multiple themes and one-click copy to WeChat."
+  }
+  </script>
 </head>
 <body>
-  <div id="app" class="container">
-    <el-container>
-      <el-header class="top">
-        <div class="logo">{{ title }}</div>
-        <el-form size="mini" class="ctrl" :inline=true>
-          <el-form-item label="Markdown 编辑器主题">
-            <el-select v-model="currentEditorTheme" size="mini" placeholder="选择字体" @change="editorThemeChanged">
-              <el-option v-for="editorTheme in editorThemes" :key="editorTheme.value" :label="editorTheme.label"
-                :value="editorTheme.value">
-              </el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="字体">
-            <el-select v-model="currentFont" size="mini" placeholder="选择字体" @change="fontChanged">
-              <el-option v-for="font in builtinFonts"  :style="{fontFamily: font.value}"
-                :key="font.value"
-                :label="font.label"
-                :value="font.value">
-                <span style="float: left">{{ font.label }}</span>
-                <span style="float: right; color: #8492a6; font-size: 13px" >Abc</span>
-              </el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="字号">
-            <el-select v-model="currentSize" size="mini" placeholder="选择段落字体大小" @change="sizeChanged">
-              <el-option v-for="size in sizeOption"
-                :key="size.value"
-                :label="size.label"
-                :value="size.value">
-                <span style="float: left">{{ size.label }}</span>
-                <span style="float: right; color: #8492a6; font-size: 13px" >{{ size.desc }}</span>
-              </el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="主题">
-            <el-select v-model="currentTheme" size="mini" placeholder="选择主题样式" @change="themeChanged">
-              <el-option v-for="theme in themeOption" :key="theme.value" :label="theme.label" :value="theme.value">
-                <span style="float: left">{{ theme.label }}</span>
-                <span style="float: right; color: #8492a6; font-size: 13px">{{ theme.author }}</span>
-              </el-option>
-            </el-select>
-          </el-form-item>
-        </el-form>
-        <el-button class="about" @click="aboutDialogVisible = true">关于</el-button>
-      </el-header>
-      <el-main class="main-body">
-        <el-row :gutter="10" class="main-section">
-          <el-col :span="12">
-            <textarea
-              id="editor"
-              type="textarea"
-              placeholder="Your markdown here."
-              v-model="source">
-            </textarea>
-          </el-col>
-          <el-col :span="12" class="preview-wrapper">
-            <section>
-              <div class="hint">全选复制或<a href="#" @click="copy" class="copy-button">点此复制</a>，然后在公众号编辑器粘贴</div>
-              <div class="preview" contenteditable="true">
-                <div id="output" v-html="output">
-                </div>
-              </div>
-            </section>
-          </el-col>
-        </el-row>
-      </el-main>
-    </el-container>
-
-    <el-dialog title="关于" :visible.sync="aboutDialogVisible" width="30%" center>
-      <div>
-        <h3>WeChat Format 有什么用？</h3>
-        <p>能较好地排版；</p>
-        <p>能解决 <code>ul</code> 和 <code>ol</code> 渲染时样式被微信编辑器重置的问题；</p>
-        <p>能把外部链接自动转为参考文献索引，并且附在文章末尾</p>
-        <p>&nbsp;</p>
-        <h3>关于我</h3>
-        <p>我是 极目楚天舒。如果你喜欢我的工具，可以：</p>
-        <p>关注我的公众号 "<code>闲话操作系统</code>"，<a href='https://talkaboutos.com' target='_blank' class='url'>博客</a> 或 <a href='https://github.com/StrokMitream/wechatformat' target='_blank' class='url'>Github</a></p>
-        <p>
-          微信打赏我：
-          <img src="./assets/images/wechat_reward.jpeg" style="width: 60%; display: block; margin: 0 auto;"/>
-        </p>
-      </div>
-      <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="aboutDialogVisible = false">打赏了！</el-button>
-      </span>
-    </el-dialog>
+  <div id="app">
+    <noscript>
+      <h1>Markdown 编辑器 — 在线 Markdown 预览与格式化工具</h1>
+      <p>WeChat Format 是一款免费的在线 Markdown 编辑器（Markdown editor）、Markdown 预览器（Markdown viewer / preview），
+      在浏览器中在线（online）编写 Markdown，实时预览排版效果，并一键复制到微信公众号。请启用 JavaScript 以使用编辑器。</p>
+    </noscript>
   </div>
-
-  <script src="assets/scripts/axios.min.js"></script>
-  <script src="assets/scripts/marked.min.js"></script>
-  <script src="assets/scripts/vue.js"></script>
-  <script src="assets/scripts/vue-eleui.js"></script>
-  <script src="assets/scripts/FuriganaMD.js"></script>
-  
-  <script src="codemirror/codemirror.js"></script>
-  <script src="codemirror/mode/markdown/markdown.js"></script>
-
-  <script src="assets/scripts/themes/default.js"></script>
-  <script src="assets/scripts/themes/lupeng.js"></script>
-  <script src="assets/scripts/themes/md.js"></script>
-  <script src="assets/scripts/renderers/wx-renderer.js"></script>
-  <script src="assets/scripts/editor.js"></script>
-  
-  <script defer data-domain="wechatformat.com" src="https://click.pageview.click/js/script.js"></script>
-
+  <script type="module" src="/src/main.ts"></script>
 </body>
 </html>
